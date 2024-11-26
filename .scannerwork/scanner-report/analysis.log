@@ -19,13 +19,15 @@ Bundled analyzers:
   - Configuration detection fot Code Quality and Security 1.2.0.267 (config)
 Global server settings:
   - sonar.core.id=147B411E-AZNpRq8VKygTV2bmphGw
-  - sonar.core.startTime=2024-11-26T16:20:59+0000
+  - sonar.core.startTime=2024-11-26T19:43:04+0000
   - sonar.forceAuthentication=true
   - sonar.validateWebhooks=false
 Project server settings:
   - sonar.qualitygate.ignoreSmallChanges=false
 Project scanner properties:
   - sonar.host.url=http://localhost:9000
+  - sonar.java.binaries=out
+  - sonar.java.libraries=libs/javax.servlet-api-4.0.1.jar
   - sonar.login=******
   - sonar.password=******
   - sonar.projectBaseDir=/Users/siri/Desktop/ASSS_project
@@ -36,7 +38,7 @@ Project scanner properties:
   - sonar.scanner.app=ScannerCLI
   - sonar.scanner.appVersion=6.2.1.4610
   - sonar.scanner.arch=arm64
-  - sonar.scanner.bootstrapStartTime=1732643241361
+  - sonar.scanner.bootstrapStartTime=1732650261689
   - sonar.scanner.home=/opt/homebrew/Cellar/sonar-scanner/6.2.1.4610/libexec
   - sonar.scanner.os=macos
   - sonar.scanner.wasEngineCacheHit=true

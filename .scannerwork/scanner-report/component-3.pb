@@ -1,1 +1,1 @@
- 2javaXhrsrc/java/newTest.java
+ 2javaXhrsrc/java/XSSExample.java

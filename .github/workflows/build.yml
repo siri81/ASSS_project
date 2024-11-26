@@ -24,6 +24,22 @@ jobs:
         with:
           java-version: 17  # Ensure Java 17 is available
           distribution: 'temurin'  # Use Eclipse Temurin for compatibility
+      # Step 3: Download the Servlet API JAR
+      - name: Download javax.servlet-api JAR
+        run: |
+          curl -L -o javax.servlet-api-4.0.1.jar https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar
+          mkdir -p lib && mv javax.servlet-api-4.0.1.jar lib/
+
+      # Step 4: Compile Java files
+      - name: Compile Java files
+        run: |
+          mkdir -p out
+          javac -cp lib/javax.servlet-api-4.0.1.jar  $(find . -name "*.java")
+
+      # Step 5: Run Java program (if applicable)
+      - name: Run Java program
+        run: |
+          java -cp lib/javax.servlet-api-4.0.1.jar: *
 
       # Step 3: Install Python dependencies (optional, for Python projects)
       - name: Install Python dependencies
