@@ -1,39 +1,47 @@
-name: Build
+name: Python SonarQube Analysis
 
 on:
   push:
     branches:
       - main
-
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
-    name: Build and analyze
+  sonarqube:
+    name: Run SonarQube Analysis
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
+          python-version: '3.8'  # Use the Python version your project requires
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Ensure you have a requirements.txt file
+
+      # Step 4: Run SonarQube analysis
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v3
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ASSS_project -Dsonar.projectName='ASSS_project'
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Make sure you have the SONAR_TOKEN set in GitHub Secrets
+          SONAR_HOST_URL:  ${{ secrets.SONAR_HOST_URL }}# Replace with your SonarQube instance URL
+          SONAR_PROJECT_KEY: ASSS_project  # Replace with your SonarQube project key
+
+      # Optional: Step 5 to Check if the SonarQube Quality Gate passes
+      - name: Check quality gate
+        uses: sonarsource/sonarqube-quality-gate-action@v2
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_HOST_URL: https://your-sonarqube-instance-url  # Replace with your SonarQube instance URL
