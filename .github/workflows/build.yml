@@ -41,6 +41,7 @@ jobs:
           SONAR_TOKEN: sqp_d991f256fabfcc46e0f8fa28812f87766e24395c  # Token from SonarQube
           SONAR_HOST_URL: http://localhost:9000  # SonarQube URL
           SONAR_PROJECT_KEY: ASSS_project  # Replace with your project's SonarQube key
-
+          SONAR_LOGIN: ${{ secrets.SONAR_USERNAME }}  # Username from GitHub Secrets
+          SONAR_PASSWORD: ${{ secrets.SONAR_PASSWORD }}  # Password from GitHub Sec
       # Optional Step 5: Check SonarQube Quality Gate Status
   
