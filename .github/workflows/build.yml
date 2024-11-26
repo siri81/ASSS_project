@@ -40,7 +40,7 @@ jobs:
 
       # Optional: Step 5 to Check if the SonarQube Quality Gate passes
       - name: Check quality gate
-        uses: sonarsource/sonarqube-quality-gate-action@v2
+        uses: sonarsource/sonarqube-quality-gate-action@v1
         with:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
         env:
