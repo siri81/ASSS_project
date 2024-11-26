@@ -5,47 +5,42 @@ on:
     branches:
       - main
 
+
 jobs:
   build:
+    name: Build and Analyze
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: actions/checkout@v3
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Ensure a full clone for better analysis relevancy
 
-      - uses: actions/setup-java@v3   
+      # Step 2: Set up Java (required for SonarScanner)
+      - name: Set up Java
+        uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'   
+          java-version: 17  # Ensure Java 17 is available
+          distribution: 'temurin'  # Use Eclipse Temurin for compatibility
 
-      - name: Cache SonarQube Scanner
-        uses: actions/cache@v3
+      # Step 3: Install Python dependencies (optional, for Python projects)
+      - name: Install Python dependencies
+        uses: actions/setup-python@v2
         with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-cache-${{ hashFiles('**/sonar-scanner.properties') }}
-          restore-keys: ${{ runner.os }}-sonar-cache-
+          python-version: '3.8'  # Adjust to your project's Python version
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Ensure requirements.txt exists
 
+      # Step 4: Run SonarQube scan
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@v3
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_PROJECT_KEY: my-project
-        with:
-          args: >-
-            -Dsonar.projectKey=my-project
-            -Dsonar.projectName=My Project
-            -Dsonar.projectVersion=1.0
-            -Dsonar.sources=.
-            -Dsonar.java.binaries=target/classes
-            -Dsonar.language=java
-            -Dsonar.java.sourceVersion=17
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token from SonarQube
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  # SonarQube URL
+          SONAR_PROJECT_KEY: ASSS_project  # Replace with your project's SonarQube key
 
-      - name: Check Quality Gate Status
-        uses: sonarsource/sonarqube-quality-gate-action@v1
-        with:
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
-        env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # Optional Step 5: Check SonarQube Quality Gate Status
+  
